@@ -1,0 +1,16 @@
+FROM python:3.12-slim
+
+# Set working directory
+WORKDIR /app_chat
+
+# Copy chat service code
+COPY ./app_chat/ ./
+COPY ./requirements.txt ./
+# Install dependencies
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Expose a different port (e.g., 8100)
+EXPOSE 8100
+
+# Run the chat service
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8100"]
