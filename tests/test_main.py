@@ -1,12 +1,18 @@
+import os
 import uuid
 from datetime import datetime, UTC
 
-API_KEY = "supersecretapikey"
+def get_secret(name: str) -> str:
+    file_path = "/run/secrets/api_key"
+    if file_path and os.path.exists(file_path):
+        with open(file_path) as f:
+            return f.read().strip()
+    raise ValueError(f"Secret {name} not found")
 
-# Helpers
+print(get_secret("API_KEY"))
+
 def auth_headers():
-    return {"X-API-Key": API_KEY}
-
+    return {"X-API-Key": get_secret("API_KEY")}
 
 def test_create_message(client):
     sample_message = {
@@ -26,7 +32,6 @@ def test_create_message(client):
 
 
 def test_update_message(client):
-    # create message first
     create_response = client.post(
         "/messages/",
         json={
@@ -41,7 +46,6 @@ def test_update_message(client):
     assert create_response.status_code == 200
     message_id = create_response.json()["message_id"]
 
-    # update message
     response = client.put(
         f"/messages/{message_id}",
         json={"content": "Updated content"},
@@ -52,7 +56,6 @@ def test_update_message(client):
 
 
 def test_get_messages(client):
-    # create one message
     client.post(
         "/messages/",
         json={
@@ -65,7 +68,6 @@ def test_get_messages(client):
         headers=auth_headers(),
     )
 
-    # fetch all messages
     response = client.get("/messages/", headers=auth_headers())
     assert response.status_code == 200
     data = response.json()
@@ -74,5 +76,5 @@ def test_get_messages(client):
 
 
 def test_unauthorized(client):
-    response = client.get("/messages/")  # no headers
+    response = client.get("/messages/")
     assert response.status_code == 401

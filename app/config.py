@@ -31,7 +31,7 @@ DB_USER = "postgres"
 DB_NAME = "messages_db"
 DB_HOST = "db"
 DB_PASSWORD = get_secret("DB_PASSWORD")
-API_KEY = get_secret("api_key")
+API_KEY = get_secret("API_KEY")
 
 if DB_PASSWORD is None:
     raise ValueError("DB_PASSWORD is not set, check Docker secret mounting!")

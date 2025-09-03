@@ -44,16 +44,16 @@ Since there is no UI I strongly advise usage of swagger interface available on `
 ### Running the App
 
 ```bash
-# Build and run the persistence service
-docker compose -f docker-compose.yaml up --build
+    docker network create app_network
+    docker compose -f docker-compose.yaml up --build
 ```
 
 The service will be available on `http://localhost:8000`.
 
-### API Key
+### API Key and DB password
 
 Set the API key in `secrets/api_key.txt` and Docker Compose will mount it as `API_KEY`.
-
+Set the DB password in secrets/db_password.txt
 ---
 
 ## Chat AI Service
@@ -68,6 +68,7 @@ Set the API key in `secrets/api_key.txt` and Docker Compose will mount it as `AP
 ### Running Chat Service Alone
 
 ```bash
+  docker network create app_network
   docker compose -f docker-compose.chat.yaml up --build
 ```
 
